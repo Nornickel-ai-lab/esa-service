@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { toTypedSchema } from '@vee-validate/yup';
 import { useForm } from 'vee-validate';
 
 import { loginSchema } from '@/features/auth/login/model/loginSchema';
 import { useLogin } from '@/features/auth/login/model/useLogin';
+import { parseApiError } from '@/shared/api/errorHandler';
 import { Button } from '@/shared/ui/button';
 import {
   FormControl,
@@ -16,17 +18,23 @@ import { Input } from '@/shared/ui/input';
 import { ui } from '@/shared/config/ui';
 
 const { submit } = useLogin();
+const errorMessage = ref('');
 
 const { handleSubmit, isSubmitting } = useForm({
   validationSchema: toTypedSchema(loginSchema),
   initialValues: {
-    email: '',
+    email: 'researcher@local.dev',
     password: '',
   },
 });
 
 const onSubmit = handleSubmit(async (values) => {
-  await submit(values);
+  errorMessage.value = '';
+  try {
+    await submit(values);
+  } catch (error) {
+    errorMessage.value = parseApiError(error);
+  }
 });
 </script>
 
@@ -90,6 +98,12 @@ const onSubmit = handleSubmit(async (values) => {
       >
         {{ ui.loginSubmit }}
       </Button>
+      <p
+        v-if="errorMessage"
+        class="text-sm text-red-400"
+      >
+        {{ errorMessage }}
+      </p>
     </form>
   </div>
 </template>

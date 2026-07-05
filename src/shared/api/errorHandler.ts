@@ -16,6 +16,9 @@ export const parseApiError = (error: unknown): string => {
   }
   const detail = error.response?.data?.detail;
   if (typeof detail === 'string' && detail.length > 0) {
+    if (detail === 'invalid credentials') {
+      return ui.loginFailed;
+    }
     return detail;
   }
   if (error.message) {

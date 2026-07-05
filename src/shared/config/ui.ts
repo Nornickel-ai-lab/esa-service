@@ -4,6 +4,7 @@ export const ui = {
   loginEmail: 'Email',
   loginPassword: 'Пароль',
   loginSubmit: 'Войти',
+  loginFailed: 'Неверный email или пароль',
   fieldRequired: 'Обязательное поле',
   redirectInvalid: 'Недопустимый адрес перенаправления',
 } as const;
